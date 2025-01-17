@@ -47,3 +47,58 @@ function ProductsPage() {
 }
 
 export default ProductsPage;
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+function CartPage() {
+  const [cart, setCart] = useState([]);
+
+  // Load cart data from localStorage
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(storedCart);
+  }, []);
+
+  // Remove item from cart
+  const handleRemove = (index) => {
+    const updatedCart = [...cart];
+    updatedCart.splice(index, 1); // Remove the item at the specified index
+    setCart(updatedCart);
+
+    // Update localStorage after removing the item
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  return (
+    <div>
+      <h1>Cart</h1>
+      {cart.length === 0 ? (
+        <p>Your cart is empty</p>
+      ) : (
+        <div>
+          {cart.map((item, index) => (
+            <div key={index}>
+              <p>{item.name} - ${(item.price / 100).toFixed(2)}</p>
+              <button onClick={() => handleRemove(index)}>Remove</button>
+            </div>
+          ))}
+          <Link to="/checkout">
+            <button>Proceed to Checkout</button>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default CartPage;
